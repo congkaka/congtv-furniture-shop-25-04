@@ -48,7 +48,7 @@ class HomeController extends Controller
             $fileImages = [];
             if (!empty($request->file('prodcut_color')['file'])) {
                 foreach ($request->file('prodcut_color')['file'] as $key => $file) {
-                    $name = time() . rand(1, 100) . $file->getClientOriginalExtension();
+                    $name = time() . rand(1, 100) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('files'), $name);
                     $fileColors[$key] = $name;
                 }
@@ -56,14 +56,13 @@ class HomeController extends Controller
             // dd($request->prodcut_color['file'][0]->getClientOriginalName());
             if ($request->hasfile('product_images')) {
                 foreach ($request->file('product_images') as $key => $file) {
-                    $name = time() . rand(1, 100) . $file->getClientOriginalExtension();
+                    $name = time() . rand(1, 100) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('files'), $name);
                     $fileImages[$key] = $name;
                 }
             }
             $colorData = $request->prodcut_color;
             $colorData['file'] = $fileColors;
-
             $product = new Product();
             $product->name = $request->name;
             $product->images = $fileImages;
@@ -74,6 +73,8 @@ class HomeController extends Controller
             $product->promotion_price = $request->promotion_price;
             $product->exist = $request->exist;
             $product->description = $request->description;
+            // dd($product);
+
             $product->save();
 
             return redirect()->route('product.index');
@@ -122,7 +123,7 @@ class HomeController extends Controller
             $fileImages = [];
             if (!empty($request->file('prodcut_color')['file'])) {
                 foreach ($request->file('prodcut_color')['file'] as $key => $file) {
-                    $name = time() . rand(1, 100) . $file->getClientOriginalExtension();
+                    $name = time() . rand(1, 100) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('files'), $name);
                     $fileColors[$key] = $name;
                 }
@@ -130,7 +131,7 @@ class HomeController extends Controller
             // dd($request->prodcut_color['file'][0]->getClientOriginalName());
             if ($request->hasfile('product_images')) {
                 foreach ($request->file('product_images') as $key => $file) {
-                    $name = time() . rand(1, 100) . $file->getClientOriginalExtension();
+                    $name = time() . rand(1, 100) .'.'. $file->getClientOriginalExtension();
                     $file->move(public_path('files'), $name);
                     $fileImages[$key] = $name;
                 }

@@ -30,7 +30,7 @@
                                         <a href="#" class="image"><img src="{{asset('files/')}}/{{$dataHeader->product->images[0] ?? ''}}" class="cart-thumb" alt=""></a>
                                         <div class="cart-item-desc">
                                             <h6><a href="#">{{$dataHeader->product->name ?? ''}}</a></h6>
-                                            <p>{{$dataHeader->orderProduct->quantity ?? 1}}x - <span class="price">₫{{$dataHeader->product->promotion_price ?? 0 }}</span></p>
+                                            <p>{{$dataHeader->orderProduct->quantity ?? 1}}x - <span class="price">₫{{$dataHeader->orderProduct->promotion_price ?? 0 }}</span></p>
                                         </div>
                                         <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
                                     </li>

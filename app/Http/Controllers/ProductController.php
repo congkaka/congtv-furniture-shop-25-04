@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Bill;
 use App\Models\OrderProduct;
-use PHPUnit\Util\Json;
+use Illuminate\Support\Facades\DB;
+use App\Jobs\SendEmail;
 
 class ProductController extends Controller
 {
@@ -35,10 +36,10 @@ class ProductController extends Controller
             }
             $bill->user_id = 1;
             $bill->product_id = $request->productId ?? 0;
-            $bill->street = '36 Duy Tân, Cầu giấy';
+            $bill->street = 'Địa chỉ user login 36 Duy Tân, Cầu giấy';
             $bill->total_order = $price * ($request->quantity ?? 1);
-            $bill->name = 'Đinh Quốc Cường';
-            $bill->email = 'cuongdq@gmail.com';
+            $bill->name = 'User login';
+            $bill->email = 'userlogin@gmail.com';
             $bill->phone = '0347578698';
             $bill->save();
 
@@ -46,6 +47,9 @@ class ProductController extends Controller
                 $orderProduct->bill_id = $bill->id;
                 $orderProduct->color = $request->color ?? '';
                 $orderProduct->size = $request->size ?? '';
+                $orderProduct->price = $request->price ?? 0;
+                $orderProduct->promotion_price = $request->promotionPrice ?? 0;
+                $orderProduct->quantity = $request->quantity ?? 1;
                 $orderProduct->save();
             }
 
@@ -63,48 +67,50 @@ class ProductController extends Controller
         return view('pages.product.listorder', compact('data'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function delete($id)
     {
-        //
+        $bill = Bill::find($id);
+        $orderProduct = OrderProduct::where('bill_id', $bill->id);
+        $orderProduct->delete();
+        $bill->delete();
+
+        return redirect()->route('product.listOrder');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function store(Request $request)
     {
-        //
-    }
+        try {
+            $products = Bill::with('orderProduct', 'product')->where('status', 0)->get();
+            $bills = Bill::where('status', 0)->get()->pluck('id');
+            foreach ($bills as $billId) {
+                DB::table('bills')
+                    ->where('id', $billId)
+                    ->update([
+                        'street' => $request->street_address,
+                        'name' => $request->name,
+                        'email' => $request->email_address,
+                        'phone' => $request->phone_number,
+                        'note' => $request->note,
+                        'status' => 1
+                    ]);
+            }
+            if ($products->count() > 0) {
+                $users = $request->email_address;
+                $message = [
+                    'type' => 'Thông tin đặt hàng',
+                    'products' => $products,
+                    'street' => $request->street_address,
+                    'name' => $request->name,
+                    'phone' => $request->phone_number,
+                    'note' => $request->note,
+                ];
+                SendEmail::dispatch($message, $users)->delay(now()->addMinute(1));
+            }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+            return redirect()->route('web.home');
+        } catch (\Exception $e) {
+            dd($e);
+        }
+        
     }
 }

@@ -90,7 +90,7 @@
                         </div>
                     </div>
                     <h4 class="price">
-                        <p style="font-size: 1.875rem;font-weight: 500;color: #ee4d2d;"><span>₫{{$products->price}}</span> - <span>₫{{$products->promotion_price}}</span></p>
+                        <p style="font-size: 1.875rem;font-weight: 500;color: #ee4d2d;">{{(!empty($products->price) ? '₫' : '')}}<span id="jsprice">{{$products->price}}</span> - {{(!empty($products->promotion_price) ? '₫' : '')}}<span id="jspromotion">{{$products->promotion_price}}</span></p>
                     </h4>
 
                     <p class="available">Trạng thái: <span class="text-muted">Còn hàng</span></p>
@@ -108,13 +108,13 @@
                         <div class="widget-desc">
                             <ul>
                                 @if(!empty($products->color['file']))
-                                @php $i = count($products->images) @endphp
-                                @foreach($products->color['name'] as $keyfcl =>$colorFile)
-                                @if(!empty($colorFile))
-                                <li data-target="#product_details_slider" data-slide-to="{{$i}}"><a class="btn-color">{{$colorFile}}</a></li>
-                                @php $i++ @endphp
-                                @endif
-                                @endforeach
+                                    @php $i = count($products->images) @endphp
+                                    @foreach($products->color['name'] as $keyfcl =>$colorFile)
+                                        @if(!empty($colorFile))
+                                        <li data-target="#product_details_slider" data-slide-to="{{$i}}"><a class="btn-color" data-price="{{$products->color['price'][$keyfcl]}}">{{$colorFile}}</a></li>
+                                        @php $i++ @endphp
+                                        @endif
+                                    @endforeach
                                 @endif
                             </ul>
                         </div>
@@ -123,9 +123,9 @@
                         <h6 class="widget-title">Size</h6>
                         <div class="widget-desc">
                             <ul>
-                                @foreach($products->size as $keysz =>$size)
+                                @foreach($products->size['name'] as $keysz =>$size)
                                 @if(!empty($size))
-                                <li><a class="btn-size">{{$size}}</a></li>
+                                <li><a class="btn-size" data-price="{{$products->size['price'][$keysz]}}" data-promotion-price="{{$products->size['promotionPrice'][$keysz]}}">{{$size}}</a></li>
                                 @endif
                                 @endforeach
                             </ul>
@@ -150,6 +150,7 @@
                     <input hidden id="promotionPrice" name="promotionPrice" value="{{$products->promotion_price}}" type="text">
                     <input hidden  name="txtColor" id="txtColor" value="" type="text">
                     <input hidden  name="txtSize" id="txtSize" value="" type="text">
+                    <input hidden  name="variant" id="variant" value="" type="text">
                     <!-- </form> -->
                     <!-- </form> -->
                     <div id="accordion" role="tablist">
@@ -309,10 +310,24 @@
     $('.btn-color').click(function () {
         $('.btn-color').removeClass('btn-color-active');
         $(this).addClass('btn-color-active');
+        $('#variant').val($(this).data('price'));
     });
     $('.btn-size').click(function () {
         $('.btn-size').removeClass('btn-size-active');
         $(this).addClass('btn-size-active');
+        //price with size
+        var variant = $('#variant').val();
+        if (variant != '') {
+            var price = $(this).data('price');
+            var promotionPrice = $(this).data('promotion-price');
+            if(price != '') {
+                $('#jsprice').text(Number(price) + Number(variant));
+            }
+            if(promotionPrice != '') {
+                $('#jspromotion').text(Number(promotionPrice) + Number(variant));
+            }
+        }        
+
     });
     function check() {
         var id = $('#qty').val();
@@ -343,9 +358,10 @@
             'size': size,
             'quantity': quantity,
             'productId': productId,
-            'price': $('#price').val(),
-            'promotionPrice': $('#promotionPrice').val(),
+            'price': $('#jsprice').text(),
+            'promotionPrice': $('#jspromotion').text(),
         }
+        // console.log(data); return;
         $.ajax({
                 type: 'POST',
                 url: url,

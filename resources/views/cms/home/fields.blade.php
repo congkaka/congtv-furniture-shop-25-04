@@ -38,8 +38,9 @@
         <div class="product-color">
             @foreach($product->color['name'] ?? [0,1,2,3] as $key => $productColors)
             <div class="row">
-                <div class="col-4">Màu {{$key}}: <input type="text" class="form-control" name="prodcut_color[name][]" value="{{(!empty($product->color['name'])) ? $productColors : ''}}"></div>
-                <div class="col-7">Ảnh: <input type="file" class="form-control" name="prodcut_color[file][]" value="{{$product->color['file'][$key] ?? ''}}" /></div>
+                <div class="col-3">Màu {{$key}}: <input type="text" class="form-control" name="prodcut_color[name][]" value="{{(!empty($product->color['name'])) ? $productColors : ''}}"></div>
+                <div class="col-2">Giá màu {{$key}}: <input type="number" class="form-control" max="1000000000000" min="0" name="prodcut_color[price][]" value="{{$product->color['price'][$key] ?? 0}}"></div>
+                <div class="col-6">Ảnh: <input type="file" class="form-control" name="prodcut_color[file][]" value="{{$product->color['file'][$key] ?? ''}}" /></div>
                 @if(!empty($product->color['file'][$key]))
                 <div class="col-1" >Avatar: <img class="form-control" style="width: 60px;height: 45px;" src="{{asset('files/')}}/{{$product->color['file'][$key]}}" alt=""></div>
                 @endif
@@ -50,11 +51,23 @@
     <div class="form-group">
         <label class="form-label" for="product_size">size</label>
         <div class="product-color">
+        @foreach($product->size['name'] ?? [0,1,2,3,4,5] as $key => $size)
+            @if(!empty($product->size['name']))
             <div class="row">
-            @foreach($product->size ?? [0,1,2,3,4,5] as $key => $size)
-                <div class="col-4">size {{$key}}: <input type="text" name="product_size[]" class="form-control" value="{{(!empty($product->size)) ? $size  : ''}}"></div>
-            @endforeach
+                <div class="col-4">size {{$key}}: <input type="text" name="product_size[name][]" class="form-control" value="{{$size ?? ''}}"></div>
+                <div class="col-4">giá {{$key}}: <input type="number" name="product_size[price][]" class="form-control" value="{{$product->size['price'][$key] ?? ''}}"></div>
+                <div class="col-4">giá khuyến mại {{$key}}: <input type="number" name="product_size[promotionPrice][]" class="form-control" value="{{$product->size['promotionPrice'][$key] ?? ''}}"></div>
             </div>
+            @else
+            <div class="row">
+                <div class="col-4">size {{$key}}: <input type="text" name="product_size[name][]" class="form-control" value=""></div>
+                <div class="col-4">giá {{$key}}: <input type="number" name="product_size[price][]" class="form-control" value=""></div>
+                <div class="col-4">giá khuyến mại {{$key}}: <input type="number" name="product_size[promotionPrice][]" class="form-control" value=""></div>
+            </div>
+            @endif
+            
+        @endforeach
+        
         </div>
     </div>
     <div class="form-group">

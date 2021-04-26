@@ -49,7 +49,7 @@
                         <p>Tên: {{$value->name}}</p>
                         <p>SĐT: {{$value->phone}}</p>
                         <p>Địa chỉ: {{$value->street}}</p>
-                        <p>Ghi chú: {{$value->street}}</p>
+                        <p>Ghi chú: {{$value->note}}</p>
                     </td>
                         <td><a href="#"><img style="width: 128px; height: 128px;" src="{{asset('files/')}}/{{$value->product->images[0] ?? ''}}" alt="Product"></a></td>
                         <td>
@@ -58,7 +58,7 @@
                             <p>size: {{$value->orderProduct->size ?? ''}}</p>
                         
                         </td>
-                        <td>{{$value->product->promotion_price ?? 0}}</td>
+                        <td>{{$value->orderProduct->promotion_price ?? 0}}</td>
                         <td>{{$value->orderProduct->quantity ?? 1}}</td>
                         <td>₫{{$value->total_order}}</td>
                         <td>{{$value->created_at}}</td>

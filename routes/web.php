@@ -19,3 +19,5 @@ Route::get('/', [HomeController::class, 'index'])->name('web.home');
 Route::get('/product', [ProductController::class, 'index'])->name('product.detail');
 Route::get('/product/listOrder', [ProductController::class, 'listOrder'])->name('product.listOrder');
 Route::post('/product/order', [ProductController::class, 'order'])->name('product.order');
+Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
+Route::delete('/product/{id}', [ProductController::class, 'delete'])->name('product.delete');
