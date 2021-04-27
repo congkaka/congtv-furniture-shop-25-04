@@ -332,7 +332,7 @@
     function check() {
         var id = $('#qty').val();
         var exist = $('#productExist').val();
-        var result = 1;
+        var result = 0;
         if (id > exist) {
             $('#product-exist-warning').text('Quá số lượng đặt hàng');
             $('#qty').val(0);
