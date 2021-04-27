@@ -286,7 +286,7 @@
                     <div class="single_gallery_item">
                         <!-- Product Image -->
                         <div class="product-img">
-                            <img src="{{asset('files')}}/{{$productEquivalent->images[0]}}" alt="">
+                            <img src="{{asset('files')}}/{{$productEquivalent->images[0] ?? ''}}" alt="">
                             <div class="product-quicview">
                                 <a href="#" data-toggle="modal" data-target="#quickview"><i class="ti-plus"></i></a>
                             </div>
@@ -332,16 +332,20 @@
     function check() {
         var id = $('#qty').val();
         var exist = $('#productExist').val();
+        var result = 1;
         if (id > exist) {
             $('#product-exist-warning').text('Quá số lượng đặt hàng');
             $('#qty').val(0);
+            var result = 1;
         }
+        return result;
     };
     $('#addtocart').click( function() {
         var url = "{{route('product.order')}}";
         var quantity = $('#qty').val();
-        if(quantity <= 0) {
-            alert('Số lượng sản phẩm lớn hơn 0');
+        
+        if(quantity <= 0 || check() == 1) {
+            alert('Chọn số lượng sản phẩm');
             return false;
         }
         var color = $('.btn-color-active').text();

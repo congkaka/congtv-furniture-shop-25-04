@@ -110,7 +110,7 @@
             <div class="col-12 col-sm-6 col-md-3 single_gallery_item noithat{{$product->category_id}} wow fadeInUpBig" data-wow-delay="0.2s">
                 <!-- Product Image -->
                 <div class="product-img">
-                    <img style="width: 250px;height: 230px;" src="{{asset('files')}}/{{$product->images[0]}}" alt="">
+                    <img style="width: 250px;height: 230px;" src="{{asset('files')}}/{{$product->images[0] ?? ''}}" alt="">
                     <div class="product-quicview">
                         <a href="{{route('product.detail')}}" data-toggle="modal" data-target="#quickview"><i class="ti-plus"></i></a>
                     </div>
