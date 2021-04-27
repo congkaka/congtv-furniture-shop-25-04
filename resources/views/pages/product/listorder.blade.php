@@ -74,7 +74,7 @@
 
             </div>
         </div>
-        {!! Form::open(['route' => 'product.store']) !!}
+        {!! Form::open(['route' => 'web.product.store']) !!}
         <div class="row">
             <div class="col-12 col-md-6 col-lg-8">
                 <div class="coupon-code-area mt-70">
